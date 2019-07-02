@@ -24,6 +24,10 @@ exports.onTokenRefresh = function (success, error) {
   exec(success, error, "FirebasePlugin", "onTokenRefresh", []);
 };
 
+exports.setConfigurationPath = function (path, success, error) {
+  exec(success, error, "FirebasePlugin", "setConfigurationPath", [path]);
+};
+
 exports.grantPermission = function (success, error) {
   exec(success, error, "FirebasePlugin", "grantPermission", []);
 };
