@@ -309,6 +309,28 @@ static FirebasePlugin *firebasePlugin;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)setConfigurationPath:(CDVInvokedUrlCommand *)command {
+    NSString* path = [command.arguments objectAtIndex:0];
+    // get GoogleService-Info.plist file path
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:path ofType:@"plist"];
+    
+    // if file is successfully found, use it
+    if(filePath){
+        NSLog(@"Config .plist found, setup: [FIRApp configureWithOptions]");
+        // create firebase configure options passing .plist as content
+        FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:filePath];
+        
+        // configure FIRApp with options
+        [FIRApp configureWithOptions:options];
+    }
+
+    // no .plist found, try default App
+    if (![FIRApp defaultApp] && !filePath) {
+        NSLog(@"Config plist NOT FOUND, setup: [FIRApp defaultApp]");
+        [FIRApp configure];
+    }
+}
+
 - (void)setUserId:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         NSString* id = [command.arguments objectAtIndex:0];
